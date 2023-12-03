@@ -1,0 +1,27 @@
+"try
+"    colorscheme wombat
+"	let g:airline_theme='wombat'
+"catch
+"endtry
+" colorscheme evening
+" colorscheme morning
+" set background=dark
+" colorscheme solarized
+colorscheme dogrun
+"colorscheme shades_of_purple
+
+if is_linux
+    "set guifont=IBM\ Plex\ Mono\ 15
+    set guifont=JetBrains\ Mono\ 13
+elseif is_mac
+    set macligatures
+    set guifont=IBM_Plex_Mono:h14
+endif
+
+"set guifont=Victor_Mono:h14
+
+" Remove toolbar
+set guioptions-=T
+" Remove menubar
+"set guioptions-=m
+set cursorline

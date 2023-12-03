@@ -1,0 +1,59 @@
+[user]
+    name = Jon Marshall
+    email = jmarshall@signiant.com
+[url "git@bitbucket.org:"]
+    insteadOf = https://bitbucket.org/
+[alias]
+    st = status
+    logg = log --graph
+    br = branch
+    log1 = log --oneline
+    log1a = log --pretty=format:\"%h  %<(12,trunc)%an  %ad%x09%s\"
+    ci = commit
+    civ = commit -v
+    logga = log --graph --all --decorate
+    sts = status --short
+    current = rev-parse --abbrev-ref HEAD
+    l2p = !CURRENT=$(git current) && git log origin/$CURRENT..$CURRENT
+    l2p1 = !CURRENT=$(git current) && git log --oneline origin/$CURRENT..$CURRENT
+    d2p = !CURRENT=$(git current) && git diff origin/$CURRENT..$CURRENT
+    log1g = logg --oneline
+    prd = remote prune -n origin
+    pr = remote prune origin
+    brv = branch -avv
+    adu = add -u
+    sl = stash list
+    d = diff
+    dc = diff --cached
+    L = log --graph --all --decorate --oneline
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    interactive = auto
+    ui = true
+    pager = true
+[push]
+    default = simple
+[core]
+    excludesFile = ~/.gitignore
+    editor = vim
+    autocrlf = input
+    #crlf = input
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[credential]
+    helper = manager
+[color "diff"]
+    meta = black yellow bold
+    old = black "#FF615A" bold
+    new = white blue bold
+    context = white dim
+[diff]
+    wsErrorHighlight = none
+[color "status"]
+    untracked = "#FF0000" bold
+    changed = "#FF0000" bold

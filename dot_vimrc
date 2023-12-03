@@ -1,0 +1,160 @@
+let is_mac=0
+let is_linux=0
+let is_windows=0
+if has("win64") || has("win32")
+    let platform = "Windows"
+	let is_windows = 1
+else
+    let platform=substitute(system('uname'), '\n', '', '')
+	if (platform == 'Linux')
+		let is_linux = 1
+	else
+		let is_mac = 1
+	endif
+endif
+
+"let hostname=substitute(system('hostname'), '\n', '', '')
+
+set nocompatible      " We're running Vim, not Vi!
+syntax on             " Enable syntax highlighting
+filetype off          " Enable filetype detection
+filetype indent on    " Enable filetype-specific indenting
+filetype plugin on    " Enable filetype-specific plugins
+
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+
+set directory=~/.swp
+set nonumber
+set expandtab
+set smarttab
+set smartindent
+"set scrolloff=6
+"set backspace=indent,eol,start
+set tags=./tags,tags;$HOME/tags;$HOME/Development/code/core_trunk/tags
+set nowrap
+let mapleader = ","
+set ignorecase
+set incsearch
+"set ruler
+"set textwidth=80
+set undofile
+set undodir=~/.vimundo
+set splitbelow
+
+" Fonts
+" set noantialias
+if is_linux
+   " set guifont=Liberation\ Mono\ 11
+elseif is_mac
+   " set guifont=menlo:h12
+elseif is_windows
+   " set guifont=Cascadia_Code:h11
+   set guifont=Consolas:h12
+endif
+
+autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+autocmd BufNewFile,BufReadPost *.sh set filetype=bash
+
+"
+" Mappings
+"
+" Toggle search highlight
+noremap <Leader>hl :set hlsearch!<CR>
+noremap <Leader>p :set paste!<CR>
+noremap <Leader>w gq} <CR>
+noremap <Leader>c :close <CR>
+noremap <Leader>n :set nu! <CR>
+
+" Quick escape frominsert mode
+inoremap <Leader>m <Esc>
+
+" Strip trailing whitespace with <F5>
+nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+map Y y$
+imap ø <Esc> o
+imap Ø <Esc> <S-o>
+
+"
+" Vundle setup
+"
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin 'sheerun/vim-wombat-scheme'
+Plugin 'wadackel/vim-dogrun'
+Plugin 'ctrlpvim/ctrlp.vim'
+"Plugin 'yegappan/mru'
+"Plugin 'msanders/snipmate.vim'
+Plugin 'majutsushi/tagbar'
+" Reports for FIXME, TODO, and XXX <https://github.com/vim-scripts/TaskList.vim>
+"Plugin 'vim-scripts/TaskList.vim'
+"Plugin 'vim-airline/vim-airline'
+"Plugin 'vim-airline/vim-airline-themes'
+"Plugin 'SirVer/ultisnips'
+"Plugin 'honza/vim-snippets'
+Plugin 'fatih/vim-go'
+" Wrap with brackets, quotes, etc. <https://github.com/tpope/vim-surround>
+"Plugin 'tpope/vim-surround'
+"Plugin 'scrooloose/syntastic'
+Plugin 'Rigellute/shades-of-purple.vim' " Light Purple
+
+call vundle#end()
+
+filetype plugin indent on
+
+"
+" Plugin Configurations
+
+"       TAGBAR
+noremap <silent> <Leader>t :TagbarToggle <CR>
+noremap <silent> <Leader>f :TagbarOpen jf <CR>
+let g:tagbar_left=1
+let g:tagbar_width=50
+let g:tagbar_ctags_bin='/usr/local/bin/ctags'
+
+"       TASKLIST
+map <leader>T <Plug>TaskList
+
+"
+"       NERDTREE
+" let NERDTreeIgnore=['.o$[[file]]', '.d$[[file]]', '.dsp$[[file]]', '.sln$[[file]]', '.*vcproj.*[[file]]', '.bat$[[file]]']
+
+"       MARKDOWN
+" let g:markdown_folding=1
+let g:netrw_list_hide='.DS_Store'
+
+"       CRTLP
+let g:ctrlp_custom_ignore = 'aws-sdk-cpp'
+"let g:ctrlp_buftag_ctags_bin = '/usr/local/bin/ctags'
+"let g:ctrlp_extensions = ['buffertag']
+
+"       SYNTASTIC
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"let g:syntastic_yaml_checkers = ['yamllint']
+"let g:syntastic_zsh_checkers = ['zsh']
+"let g:syntastic_always_populate_loc_list = 1
+""let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+""let g:syntastic_cpp_include_dirs = ['/Users/jmarshall/Development/code/awscppsdk/aws-sdk-cpp/aws-cpp-sdk-core/include']
+
+"       GO VIM
+let g:go_fmt_autosave = 0 " Don't run go fmt on save
+
+"       Ack
+let g:ackprg = 'ag --vimgrep'
+
+" Other Variables
+" Allow mouse dragging and selection.
+set mouse=a
+
+" Commands
+command -nargs=0 -bar Date execute "normal! a\<C-R>=strftime(\"[%Y-%m-%d %H:%M] \")\<CR>"
+

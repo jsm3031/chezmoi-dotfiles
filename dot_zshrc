@@ -1,0 +1,76 @@
+# The following lines were added by compinstall
+
+#zstyle ':completion:*' completer _oldlist _expand _complete _ignored _match _correct _approximate _prefix
+#zstyle ':completion:*' completions 1
+#zstyle ':completion:*' expand prefix suffix
+#zstyle ':completion:*' file-sort name
+#zstyle ':completion:*' glob 1
+#zstyle ':completion:*' ignore-parents parent pwd .. directory
+#zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+#zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+##zstyle ':completion:*' list-suffixes true
+#zstyle ':completion:*' matcher-list '' 'm:{[:lower:]}={[:upper:]}' 'l:|=* r:|=*' 'r:|[._-]=** r:|=**'
+#zstyle ':completion:*' match-original both
+#zstyle ':completion:*' max-errors 2 not-numeric
+#zstyle ':completion:*' menu select=1
+#zstyle ':completion:*' preserve-prefix '//[^/]##/'
+#zstyle ':completion:*' prompt 'correction?'
+#zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+#zstyle ':completion:*' substitute 1
+#zstyle :compinstall filename '/home/jsm/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+
+typeset -U path PATH
+path=(~/.local/bin $path)
+
+export PATH
+zstyle ':completion:*' menu select
+# Allow sudo to use menu select
+zstyle ':completion::complete:*' gain-privileges 1
+
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=1000000
+setopt autocd extendedglob notify
+unsetopt beep nomatch
+# End of lines configured by zsh-newuser-install
+
+# A simple prompt
+PS1='%F{blue}%~ %(?.%F{green}.%F{red})%#%f '
+# Emacs keybindings
+bindkey -e
+# Up arrow completes based on prefix
+autoload up-line-or-beginning-search
+autoload down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+[[ -n "${key[Up]}"      ]]  && bindkey   "${key[Up]}"       up-line-or-beginning-search
+[[ -n "${key[Down]}"    ]]  && bindkey   "${key[Down]}"    down-line-or-beginning-search
+
+# Don't save duplicates in the command history
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt incappendhistory
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+#   Fish-style highlighting
+##  https://github.com/zsh-users/zsh-syntax-highlighting  
+source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+##  ...
+source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Aliases
+alias src-aliases="source ~/.config/zsh/aliases.zsh"
+source ~/.config/zsh/aliases.zsh
+function add-alias { echo 'alias '"${1}"=\"$2\" >> ~/.config/zsh/aliases.zsh; src-aliases }
+
+# Chezmoi dotfile management
+source <(chezmoi completion zsh)

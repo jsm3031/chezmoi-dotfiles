@@ -1,0 +1,67 @@
+#!/usr/bin/zsh
+
+new_name="${1}(dummy)" # this (dummy) simplifies the pattern matching below
+insert=$2
+
+builtin_mon=DP-2
+ext_mon=DP-0
+hotkeys=(1 2 3 4 5 6 7 8 9 0 a b c d e f g h i j k l m n o p q r s t u v x y z)
+builtin_mon_labels=()
+ext_mon_labels=()
+adding=
+
+# TODO Adding static hotkeys for predefined desktops desktops requires
+#      changing the code that regenrates the name based on the current
+#      index.
+
+protected=('MEDIA' 'CHAT' 'LOGS' 'WEB' 'EMACS' 'GOLAND' 'TERMINAL')
+
+curr="$(bspc query -D --names -d)"
+
+if [[ $new_name != "(dummy)" ]]; then
+	bspc monitor -a "$new_name"
+	adding=true
+else
+	for p in $protected; [[ "$curr" =~ "$p" ]] && exit 1
+	bspc desktop -r
+fi
+
+n=1
+found_curr=false
+for d in $(bspc query -m $builtin_mon -D --names); do
+	if [[ "$d" == "$curr" && -n $insert ]]; then
+		found_curr=true
+		pos=$(grep -bo '(' <<< $d | cut -d: -f1)
+		builtin_mon_labels[$n]="${d:0:$pos}($hotkeys[$n])"
+		: $((n++))
+		pos=$(grep -bo '(' <<< $new_name | cut -d: -f1)
+		builtin_mon_labels[$n]="${new_name:0:$pos}($hotkeys[$n])"
+		: $((n++))
+	else
+		pos=$(grep -bo '(' <<< $d | cut -d: -f1)
+		builtin_mon_labels[$n]="${d:0:$pos}($hotkeys[$n])"
+		: $((n++))
+	fi
+done
+[[ $found_curr == "true" && $adding == "true" ]] && builtin_mon_labels[-1]=()
+
+found_curr=false
+for d in $(bspc query -m $ext_mon -D --names); do
+	if [[ $d == $curr && -n $insert ]]; then
+		found_curr=true
+		pos=$(grep -bo '(' <<< $d | cut -d: -f1)
+		ext_mon_labels[$n]="${d:0:$pos}($hotkeys[$n])"
+		: $((n++))
+		pos=$(grep -bo '(' <<< $new_name | cut -d: -f1)
+		ext_mon_labels[$n]="${new_name:0:$pos}($hotkeys[$n])"
+		: $((n++))
+	else
+		pos=$(grep -bo '(' <<< $d | cut -d: -f1)
+		ext_mon_labels[$n]="${d:0:$pos}($hotkeys[$n])"
+		: $((n++))
+	fi
+done
+[[ $found_curr == "true" && $adding == "true" ]] && ext_mon_labels[-1]=()
+
+bspc monitor $builtin_mon -d `echo $builtin_mon_labels | awk '{print}'`
+bspc monitor $ext_mon -d `echo $ext_mon_labels | awk '{print}'`

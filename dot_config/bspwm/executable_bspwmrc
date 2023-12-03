@@ -1,0 +1,46 @@
+#!/bin/zsh
+
+# Intel/Nvidia on demand
+#MONITOR-1=eDP-1
+#MONITOR-2=DP-1-0
+
+# Dedicated Nvidia
+export MONITOR1=DP-2
+export MONITOR2=DP-0
+
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# Configure monitors
+# Conditionally configure monitors based on what is plugged in
+
+# Conditionally configure bspwm based on active monitors
+bspc monitor $MONITOR1 -d 'MEDIA(1)' 'CHAT(2)' 'LOGS(3)'
+bspc monitor $MONITOR2 -d 'TERMINAL(4)' 'EMACS(5)' 'GOLAND(6)' 'BROWSER(7)'
+
+bspc config border_width         0
+#bspc config border_width         6
+bspc config window_gap           12
+
+#bspc config focused_border_color "#0000ff"
+#bspc config normal_border_color "#E84F4F"
+#bspc config active_border_color "#D23D3D"
+
+bspc config split_ratio          0.50
+bspc config borderless_monocle   false
+bspc config gapless_monocle      false
+bspc config single_monocle       false
+
+bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a Chromium desktop='^2'
+bspc rule -a mplayer2 state=floating
+bspc rule -a bitwarden state=floating
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+
+xsetroot -cursor_name left_ptr
+#feh --bg-center /usr/share/backgrounds/linuxmint-victoria/bfantinatti_orchid.jpg
+#feh --bg-center /usr/share/backgrounds/linuxmint-victoria/mnohassi_red_mountain.jpg
+feh --bg-fill ~/Pictures/wallpapers/zelda-bird-red-01-1080.jpg --bg-fill ~/Pictures/wallpapers/zelda-sky-castle-01-4k.jpg
+# Configure polybar based on active monitors
+.config/scripts/start-polybar
+picom &
