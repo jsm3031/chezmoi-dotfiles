@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 # Intel/Nvidia on demand
 #MONITOR-1=eDP-1
@@ -11,11 +11,9 @@ export MONITOR2=DP-0
 pgrep -x sxhkd > /dev/null || sxhkd &
 
 # Configure monitors
-# Conditionally configure monitors based on what is plugged in
-
-# Conditionally configure bspwm based on active monitors
-bspc monitor $MONITOR1 -d 'MEDIA(1)' 'CHAT(2)' 'LOGS(3)'
-bspc monitor $MONITOR2 -d 'TERMINAL(4)' 'EMACS(5)' 'GOLAND(6)' 'BROWSER(7)'
+# TODO Conditionally configure monitors based on what is plugged in
+bspc monitor $MONITOR1 -d 'MEDIA(1)' 'CHAT(2)' 'TERM(3)' 'WEB(4)'
+bspc monitor $MONITOR2 -d 'EMACS(5)' 'CODE(6)' 'TERM(7)' 'WEB(8)'
 
 bspc config border_width         0
 #bspc config border_width         6
@@ -30,10 +28,12 @@ bspc config borderless_monocle   false
 bspc config gapless_monocle      false
 bspc config single_monocle       false
 
-bspc rule -a Gimp desktop='^8' state=floating follow=on
-bspc rule -a Chromium desktop='^2'
+# TODO Target desktops must be adjusted depending on active displays also
+bspc rule -a Emacs desktop='^5' state=tiled follow=on
+bspc rule -a firefox desktop='^8'
 bspc rule -a mplayer2 state=floating
 bspc rule -a bitwarden state=floating
+bspc rule -a Blueman-manager state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
