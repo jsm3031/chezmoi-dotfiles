@@ -261,6 +261,16 @@
   (interactive)
   (find-file "~/.config/polybar/config"))
 
+(defun jsm/picom ()
+  "Open the picom config file."
+  (interactive)
+  (find-file "~/.config/picom/picom.conf"))
+
+(defun jsm/journal ()
+  "Open my secret journal."
+  (interactive)
+  (find-file "~/Desktop/Org/Personal/Journal.org.gpg"))
+
 (defun jsm/init ()
   "Open the Emacs init file."
   (interactive)
@@ -720,6 +730,7 @@ _W_: prev word    _S_: skip prev     _q_: cancel
 (add-hook 'org-mode-hook
           (lambda ()
             (org-indent-mode +1)
+			(setq fill-column 80)
             (auto-fill-mode +1)
             (org-superstar-mode +1)))
 
@@ -805,31 +816,34 @@ _W_: prev word    _S_: skip prev     _q_: cancel
 ;; ## LSP
 ;;    https://emacs-lsp.github.io/lsp-mode/page/installation/
 ;; -----------------------------------------------------------------------------
-;;(use-package consult-lsp)
-;;(use-package lsp-ui)
-;;(use-package lsp-treemacs
-;;  :functions (lsp-treemacs-errors-list)
-;;  :bind
-;;  ("C-x T e" . lsp-treemacs-errors-list))
-;;
-;;(use-package lsp-mode
-;;  :commands lsp
-;;  :bind
-;;  ("C-h t" . lsp-ui-doc-glance)
-;;  ("C-h ." . lsp-ui-doc-focus-frame)
-;;  ("C-:" . lsp-iedit-highlights)
-;;  :custom
-;;  (lsp-keymap-prefix "s-l")
-;;  (lsp-diagnostics-flycheck-default-level 'info)
-;;  (lsp-diagnostic-clean-after-change t)
-;;  (lsp-completion-provider :none) ; this is required for yasnippet to work with lsp
-;;  :hook
-;;  (go-mode . lsp)
-;;  (c-mode . lsp)
-;;  ;;(sh-mode . lsp)
-;;  ;;(terraform-mode . lsp)
-;;  (lsp-mode . lsp-enable-which-key-integration)
-;;  (dired-mode . lsp-dired-mode))
+(use-package consult-lsp)
+(use-package lsp-ui)
+(use-package lsp-treemacs
+ :functions (lsp-treemacs-errors-list)
+ :bind
+ ("C-x T e" . lsp-treemacs-errors-list))
+
+
+(use-package lsp-mode
+  :config 
+ (define-key lsp-mode-map (kbd lsp-keymap-prefix) nil)
+ (define-key lsp-mode-map (kbd "C-c l") lsp-mode-map)
+ :commands lsp
+ :bind
+ ("C-h t" . lsp-ui-doc-glance)
+ ("C-h ." . lsp-ui-doc-focus-frame)
+ ("C-:" . lsp-iedit-highlights)
+ :custom
+ (lsp-diagnostics-flycheck-default-level 'info)
+ (lsp-diagnostic-clean-after-change t)
+ (lsp-completion-provider :none) ; this is required for yasnippet to work with lsp
+ :hook
+ (go-mode . lsp)
+ (c-mode . lsp)
+ ;;(sh-mode . lsp)
+ ;;(terraform-mode . lsp)
+ (lsp-mode . lsp-enable-which-key-integration)
+ (dired-mode . lsp-dired-mode))
 ;;
 ;; -----------------------------------------------------------------------------
 ;; # Git
@@ -843,9 +857,9 @@ _W_: prev word    _S_: skip prev     _q_: cancel
   :defines
   (magit-status-mode-map)
   :bind
-  (("C-c g" . magit-status)
-   ("C-c G" . magit-dispatch)
-   ("C-c f" . magit-file-dispatch)
+  (("C-x m" . magit-status)
+   ("C-x M" . magit-dispatch)
+   ("C-x F" . magit-file-dispatch)
    :map magit-status-mode-map
    ("C-o" . magit-diff-visit-file-other-window))
   :custom
@@ -1005,6 +1019,7 @@ Git gutter:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(catppuccin-enlarge-headings nil)
  '(ignored-local-variable-values
    '((helm-ctest-dir . "~/Dev/Code/Bolt/cmake-build-emacs")
 	 (helm-make-arguments . "-j15")

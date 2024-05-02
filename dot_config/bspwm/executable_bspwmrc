@@ -1,23 +1,29 @@
 #!/bin/bash
-
 # Intel/Nvidia on demand
 #MONITOR-1=eDP-1
 #MONITOR-2=DP-1-0
 
 # Dedicated Nvidia
-export MONITOR1=DP-2
+export SXHKD_SHELL=sh
+export MONITOR1=eDP-1-1
 export MONITOR2=DP-0
+export MONITOR3=DP-1
+export TERM=kitty
 
-pgrep -x sxhkd > /dev/null || sxhkd &
+pgrep -x sxhkd > /dev/null || sxhkd -m 5 &
 
 # Configure monitors
 # TODO Conditionally configure monitors based on what is plugged in
-bspc monitor $MONITOR1 -d 'MEDIA(1)' 'CHAT(2)' 'TERM(3)' 'WEB(4)'
-bspc monitor $MONITOR2 -d 'EMACS(5)' 'CODE(6)' 'TERM(7)' 'WEB(8)'
+bspc monitor $MONITOR3 -d 'Comms(1)' 'Kitty(2)' 'GoLand(3)' 'Web(4)'
+bspc monitor $MONITOR2 -d 'Emacs(5)' 'Kitty(6)' 'GoLand(7)' 'Web(8)'
+bspc monitor $MONITOR1 -d 'Media(9)' 'Kitty(0)' 'Other(a)'
+
+#bspc monitor $MONITOR1 -d 'MEDIA(2)' 'CHAT(2)' 'TERM(3)' 'WEB(4)'
+#bspc monitor $MONITOR2 -d 'EMACS(5)' 'CODE(6)' 'TERM(7)' 'WEB(8)'
 
 bspc config border_width         0
 #bspc config border_width         6
-bspc config window_gap           12
+bspc config window_gap           10
 
 #bspc config focused_border_color "#0000ff"
 #bspc config normal_border_color "#E84F4F"
@@ -30,17 +36,22 @@ bspc config single_monocle       false
 
 # TODO Target desktops must be adjusted depending on active displays also
 bspc rule -a Emacs desktop='^5' state=tiled follow=on
-bspc rule -a firefox desktop='^8'
+bspc rule -a firefox desktop='^4'
 bspc rule -a mplayer2 state=floating
-bspc rule -a bitwarden state=floating
+bspc rule -a Bitwarden state=floating
 bspc rule -a Blueman-manager state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
-xsetroot -cursor_name left_ptr
 #feh --bg-center /usr/share/backgrounds/linuxmint-victoria/bfantinatti_orchid.jpg
 #feh --bg-center /usr/share/backgrounds/linuxmint-victoria/mnohassi_red_mountain.jpg
-feh --bg-fill ~/Pictures/wallpapers/zelda-bird-red-01-1080.jpg --bg-fill ~/Pictures/wallpapers/zelda-sky-castle-01-4k.jpg
+~/.screenlayout/arandr.sh
+#nvidia-settings --assign CurrentMetaMode="2560x1440 +1920+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}"
+feh --bg-fill ~/Pictures/wallpapers/zelda-sky-castle-01-4k.jpg --bg-fill ~/Pictures/wallpapers/zelda-bird-red-01-1080.jpg --bg-fill ~/Pictures/wallpapers/link-on-epona-drinking.jpg
 # Configure polybar based on active monitors
 .config/scripts/start-polybar
 picom &
+setxkbmap us -variant colemak
+xsetroot -cursor_name left_ptr
+# Set natural scrolling
+xinput set-prop "MX Vertical Mouse" 318 1

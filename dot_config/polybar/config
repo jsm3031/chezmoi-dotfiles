@@ -72,7 +72,7 @@ font-0 = "Liberation Mono:style=Bold:size=11;3"
 
 modules-left = bspwm
 #modules-center = mpd
-modules-right = xkeyboard xbacklight pulseaudio memory cpu battery wlan date powermenu
+modules-right = xkeyboard brightnessctl pulseaudio memory cpu battery wlan date powermenu
 
 tray-position = right
 tray-padding = 2
@@ -90,6 +90,53 @@ cursor-scroll = ns-resize
 
 [bar/external]
 monitor = ${env:MONITOR2}
+dpi = 96
+width = 100%
+height = 36
+;offset-x = 1%
+;offset-y = 1%
+radius = ${jsm.radius}
+fixed-center = false
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = ${jsm.border}
+border-color = #222
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 0
+module-margin-right = 2
+
+font-0 = "Liberation Mono:style=Bold:size=11;3"
+;font-1 = "JetBrainsMono NF:style=Medium:size=10;3"
+;font-2 = "JetBrainsMono NF:style=Bold:size=10;3"
+
+modules-left = bspwm
+;modules-center = mpd
+modules-right = xkeyboard pulseaudio memory cpu battery wlan date powermenu
+
+tray-position = right
+tray-padding = 2
+;tray-background = #0063ff
+
+wm-restack = bspwm
+
+;override-redirect = true
+
+#scroll-up = bspwm-desknext
+#scroll-down = bspwm-deskprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[bar/external2]
+monitor = ${env:MONITOR3}
 dpi = 96
 width = 100%
 height = 36
@@ -301,7 +348,7 @@ type = internal/pulseaudio
 
 ;format-volume = <label-volume> <bar-volume>
 format-volume = <label-volume>
-label-volume = VOL %percentage%%
+label-volume = VOL:%percentage%%
 label-volume-foreground = ${root.foreground}
 
 label-muted = 🔇 muted
@@ -327,7 +374,7 @@ bar-volume-empty-foreground = ${colors.foreground-alt}
 [module/alsa]
 type = internal/alsa
 
-format-volume = <label-volume> <bar-volume>
+format-volume = <label-volume>:<bar-volume>
 label-volume = VOL
 label-volume-foreground = ${root.foreground}
 
@@ -437,6 +484,17 @@ menu-2-0 = power off
 menu-2-0-exec = sudo poweroff
 menu-2-1 = cancel
 menu-2-1-exec = menu-open-0
+
+[module/brightnessctl]
+type = custom/script
+exec = ~/.config/polybar/brightnessctl.sh
+
+;scroll-up = brightnessctl set 10%+
+;scroll-down = brightnessctl set 10%-
+interval = 1
+
+label = %output%
+;label-foreground = ${colors.foreground}
 
 [settings]
 screenchange-reload = true
